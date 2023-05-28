@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# $1 $2 是用户给出的第一和第二个参数
+echo $1
+for i in $(seq 1 10)   # $后为数据集，从1到10的整数
+do
+	../generate/main $2 | ./main
+done

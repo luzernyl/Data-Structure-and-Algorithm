@@ -1,0 +1,11 @@
+#!/bin/bash
+n=$2
+echo "re = ["
+for i in $(seq 1 $1)   
+do
+    re=`./test $4 $n | grep time | ../stat/main`
+    echo $n ${re#*:}   # re#*: 表示忽略re中:之前的部分
+    n=$((n+$3))   
+done
+echo "];"
+echo "plot(re(:, 1), re(:, 2), '.');"

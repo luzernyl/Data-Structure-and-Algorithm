@@ -1,0 +1,247 @@
+/**
+ * @file   main.cpp
+ * @author Luzern Yuven Luis <student@student>
+ * @date   Sun Nov  1 18:21:52 2020
+ * 
+ * @brief  An implementation of find,delete,and insert functions
+ *         in Linked List.
+ * 
+ * 
+ */
+
+#include <cstdlib>
+#include <iostream>
+#include "LinkedList.h"
+
+
+/** 
+ * Give the address of every node
+ * 
+ * @param _val value of the node
+ * 
+ * @return the address of the node
+ */
+template <typename T>
+Node<T>* LinkedList<T>::address(T _val)
+{
+  Node<T>* p = head;
+  while (p != NULL)
+    {
+      if(p->get_data() == _val)
+	{
+         return p;
+	 break;
+	}
+      p = p->get_next();
+    }
+};
+
+/** 
+ * Find the address for the preceding node of the given value.
+ * 
+ * @param _val value
+ * 
+ * @return the address of the preceding note.
+ */
+
+template <typename T>
+Node<T>* LinkedList<T>::find(T _val) const
+{
+  bool flag = false;
+    Node<T>* p = head;
+    if (p == NULL)
+      return NULL;
+    else if (p->get_data() == _val)
+      {
+	std::cout<< _val <<" is the value of the first node ! : ";
+	return NULL;
+      }
+    else if (p->get_next() == NULL)
+      std::cout<<"This Linked List has only one node !"<< std::endl;
+    while (p->get_next() != NULL)
+      {
+	if (p->get_next()->get_data() == _val)
+	  {
+	    return p;
+	    flag = true;
+	    break;
+	  }
+	else if (p->get_next()->get_data() != _val)
+	  {
+	    p = p->get_next();
+	  } 
+      }
+    if (flag == false)
+      {
+         return NULL;
+      }
+};
+
+/** 
+ * Delete the successor node of the given address
+ * 
+ * @param _add address
+ */
+
+template <typename T>
+void LinkedList<T>::del(Node<T>* _add)
+{
+  bool flag = false;
+  Node<T>* p = head;
+  Node<T>* q = p->get_next();
+  if (p == NULL)
+    {
+      std::cout << "Nothing to delete !" << std::endl;
+    }
+  else if (p->get_next() == NULL)
+    {
+      std::cout<< "This Linked List has only one node !"<< std::endl;
+    }
+  while (p->get_next() != NULL)
+    {
+      if (p == _add)
+	{
+	  Node<T>* t = q->get_next();
+	  delete q;
+	  p->set_next(t);
+	  flag = true;
+	  break;
+	}
+      p = p->get_next();
+      q = p->get_next();
+    }
+  if (flag == false)
+    {
+      std::cerr << "The address given is not in the list."<< std::endl;
+      std::exit(-1);
+    }
+};
+
+/** 
+ * Insert a value so that the linked list maintain ascending order
+ * 
+ * @param _val value to be inserted
+ */
+
+template<typename T>
+void LinkedList<T>::insert(T _val)
+{
+  Node<T>* p = head;
+  if (p == NULL)
+    {
+      p->set_data(_val);
+      p->set_next(NULL);
+    }
+  else
+    {
+      while(p->get_next() != NULL)
+	{
+	  Node<T>* q = new Node<T>;
+	  while(p->get_next()->get_data() < _val && p->get_next()->get_next() != NULL)
+	    {
+		p = p->get_next();
+	    }
+	  if (p->get_next()->get_next() == NULL)
+	    {
+	      	  q->set_data(_val);
+		  p->get_next()->set_next(q);
+		  q->set_next(NULL);
+		  break;
+	    }
+	  Node<T>* t = p->get_next();
+	  q->set_data(_val);
+	  p->set_next(q);
+	  q->set_next(t);
+	  break;
+	}
+    }
+};
+
+int main(int argc, char* argv[])
+{
+  //Generate a Linked List of 1,2,3,4
+  LinkedList<int> lst;
+  lst.append(1);
+  lst.append(3);
+  lst.append(5);
+  lst.append(7);
+  lst.append(9);
+  lst.list();
+  
+  //Print value and address of every node
+  std::cout<<"1 : " <<lst.address(1) << std::endl;
+  std::cout<<"3 : " <<lst.address(3) << std::endl;
+  std::cout<<"5 : " <<lst.address(5) << std::endl;
+  std::cout<<"7 : " <<lst.address(7) << std::endl;
+  std::cout<<"9 : " <<lst.address(9) << std::endl;
+  
+  //Find the address before number 3
+  std::cout<<"Find the address for the node before 3"<< std::endl;
+  std::cout << lst.find(3) << std::endl;
+  //Find the address before number 9
+  std::cout<<"Find the address for the node before 9"<< std::endl;
+  std::cout << lst.find(9) << std::endl;
+  //Find the address before number 4
+  std::cout<<"Find the address for the node before 4"<<std::endl;
+  std::cout<<lst.find(4) << std::endl;
+  //Find the address before number 1
+  std::cout<<"Find the address for the node before 1"<<std::endl;
+  std::cout<<lst.find(1) << std::endl;
+
+  std::cout<<std::endl;
+  
+  //Insert 3
+  std::cout<<"Inserting 3..."<<std::endl;
+  lst.insert(3);
+  //Expecting Output 1 3 3 5 7 9
+  lst.list();
+  //Insert 6
+  std::cout<<"Inserting 6..."<<std::endl;
+  lst.insert(6);
+  //Expecting Output 1 3 3 5 6 7 9
+  lst.list();
+  //Insert 2
+  std::cout<<"Inserting 2..."<<std::endl;
+  lst.insert(2);
+  //Expecting Output 1 2 3 3 5 6 7 9
+  lst.list();
+  //Insert 10
+  std::cout<<"Inserting 10..."<<std::endl;
+  lst.insert(10);
+  //Expecting Output 1 2 3 3 5 6 7 9 10
+  lst.list();
+  //Insert 1
+  std::cout<<"Inserting 1..."<<std::endl;
+  lst.insert(1);
+  //Expecting Output 1 1 2 3 3 5 6 7 9 10
+  lst.list();
+
+  std::cout<<std::endl;
+  
+  //Delete 2
+  std::cout<<"Deleting 2..."<< std::endl;
+  lst.del(lst.find(2));
+  //Expecting Output 1 1 3 3 5 6 7 9 10
+  lst.list();
+  //Delete 5
+  std::cout<< "Deleting 5..."<<std::endl;
+  lst.del(lst.find(5));
+  //Expecting Output 1 1 3 3 6 7 9 10
+  lst.list();
+  //Delete 3
+  std::cout<<"Deleting 3..."<<std::endl;
+  lst.del(lst.find(3));
+  //Expecting Output 1 1 3 6 7 9 10
+  lst.list();
+  //Delete 9
+  std::cout<<"Deleting 9..."<<std::endl;
+  lst.del(lst.find(9));
+  //Expecting Output 1 1 3 6 7 10
+  lst.list();
+  //Delete 2 (ERROR)
+  std::cout<<"Deleting 2..."<<std::endl;
+  lst.del(lst.find(2));
+  
+
+  return 0;
+};
